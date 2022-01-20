@@ -1,0 +1,11 @@
+{
+    "tokens":{
+        "(":"LPAREN",
+        ")":"RPAREN",
+        "|":"UNION",
+        "*":"STAR"
+    },
+    "rules":{
+
+    }
+}
