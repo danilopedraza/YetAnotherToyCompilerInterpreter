@@ -1,3 +1,12 @@
+import json 
+
+def getLangInfo(filename):
+    f = open(filename)
+    res = json.load(f)
+    f.close()
+    return res
+
+
 class Token:
     def __init__(self, type, literal):
         self.type = type
@@ -11,9 +20,6 @@ class AbstractLexer:
         self.nextChar()
 
         self.tokensDict = tokensDict
-        self.currentToken = None
-        self.lookAhead = None
-        self.nextToken()
 
     
     def nextChar(self):
@@ -31,20 +37,3 @@ class AbstractLexer:
 
     def nextToken(self):
         raise NotImplementedError()
-
-
-class RELexer(AbstractLexer):
-    def __init__(self, str, tokensDict):
-        super().__init__(str, tokensDict)
-    
-    def nextToken(self):
-        self.currentToken = self.lookAhead
-        if self.currentChar in self.tokensDict:
-            self.lookAhead = Token(self.tokensDict[self.currentChar], self.currentChar)
-        elif self.currentChar != None:
-            self.lookAhead = Token("CHAR", self.currentChar)
-        else:
-            self.lookAhead = None
-    
-            
-        
