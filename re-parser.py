@@ -124,3 +124,107 @@ class REParser:
         
         infix.children = [left, right]
         return infix
+
+
+class NFA:
+    def __init__(self, graph = [], initial = None, accepting = None):
+            self.graph = graph
+            self.initial = initial
+            self.accepting = accepting
+        
+
+def getNFA(root):
+    if root.type == "CHAR":
+        return NFA(
+            [
+                {root.literal:[1]},
+                {}
+            ],
+            0,
+            1
+        )
+    elif root.type == "CONCAT":
+        left = getNFA(root.children[0])
+        right = getNFA(root.children[1])
+        
+        left.graph.pop()
+        newStart = len(left.graph)
+
+        for i in range(len(right.graph)):
+            for key in right.graph[i]:
+                for j in range(len(right.graph[i][key])):
+                    right.graph[i][key][j] += newStart
+            
+        return NFA(
+            left.graph + right.graph,
+            left.initial,
+            right.accepting + newStart
+        )
+    elif root.type == "UNION":
+        left = getNFA(root.children[0])
+        right = getNFA(root.children[1])
+
+        res = NFA(
+            [
+                {"":[1, 1 + len(left.graph)]}
+            ],
+            0,
+            1 + len(left.graph) + len(right.graph)
+        )
+
+        if "" in left.graph[left.accepting]:
+            left.graph[left.accepting][""].append(len(left.graph) + len(right.graph))
+        else:
+            left.graph[left.accepting][""] = [len(left.graph) + len(right.graph)]
+
+        newStart = 1        
+        for i in range(len(left.graph)):
+            for key in left.graph[i]:
+                for j in range(len(left.graph[i][key])):
+                    left.graph[i][key][j] += newStart
+        
+        res.graph += left.graph
+        
+        if "" in right.graph[right.accepting]:
+            right.graph[right.accepting][""].append(len(right.graph))
+        else:
+            right.graph[right.accepting][""] = [len(right.graph)]
+
+        newStart += len(left.graph)
+        for i in range(len(right.graph)):
+            for key in right.graph[i]:
+                for j in range(len(right.graph[i][key])):
+                    right.graph[i][key][j] += newStart
+        
+        res.graph += right.graph
+        res.graph.append({})
+
+        return res
+    elif root.type == "STAR":
+        exp = getNFA(root.children[0])
+        res = NFA(
+            [
+                {"":[1, len(exp.graph)]}
+            ],
+            0,
+            len(exp.graph)
+        )
+
+        if "" in exp.graph[exp.accepting]:
+            exp.graph[exp.accepting][""] += [exp.initial,res.accepting]
+        else:
+            exp.graph[exp.accepting][""] = [exp.initial,res.accepting]
+
+
+        for i in range(len(exp.graph)):
+            for key in exp.graph[i]:
+                for j in range(len(exp.graph[i][key])):
+                    exp.graph[i][key][j] += 1
+        
+        res.graph += exp.graph
+        res.graph.append({})
+        res.accepting += 1
+    
+        return res
+    else:
+        return None
