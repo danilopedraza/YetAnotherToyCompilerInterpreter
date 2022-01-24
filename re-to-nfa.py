@@ -228,3 +228,32 @@ def getNFA(root):
         return res
     else:
         return None
+
+
+def NFAUnionFromREs(exps, tokens):
+    if len(exps) == 0 or len(exps) != len(tokens):
+        return None
+    
+    parser = REParser()
+
+    res = NFA(
+        [{"":[]}],
+        0,
+        {}
+    )
+
+    for i in range(len(exps)):
+        temp = getNFA(parser.parse(exps[i]))
+        
+        res.graph[res.initial][""].append(temp.initial + len(res.graph))
+        res.accepting[temp.accepting + len(res.graph)] = tokens[i]
+        
+
+        for j in range(len(temp.graph)):
+            for key in temp.graph[j]:
+                for k in range(len(temp.graph[j][key])):
+                    temp.graph[j][key][k] += len(res.graph)
+        
+        res.graph += temp.graph
+    
+    return res
