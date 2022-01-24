@@ -36,6 +36,7 @@ class REParser:
             "|" :  "UNION",
             "*" :   "STAR" 
         }
+        self.lexer = RELexer(self.tokensDict)
 
         self.currentToken = None
         self.lookAhead = None
@@ -53,7 +54,7 @@ class REParser:
         self.lookAhead = self.lexer.nextToken()
 
     def parse(self, expr):
-        self.lexer = RELexer(expr, self.tokensDict)
+        self.lexer.set(expr)
         self.advanceTokens()
         self.advanceTokens()
 

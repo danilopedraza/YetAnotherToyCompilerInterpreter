@@ -1,4 +1,5 @@
-import json 
+import json
+from re_to_nfa import NFAUnionFromREs
 
 def getLangInfo(filename):
     f = open(filename)
@@ -14,14 +15,14 @@ class Token:
 
 
 class AbstractLexer:
-    def __init__(self, str, tokensDict):
+    def __init__(self, tokensDict):
+        self.tokensDict = tokensDict
+    
+    def set(self, str):
         self.str = str
         self.index = 1
         self.nextChar()
 
-        self.tokensDict = tokensDict
-
-    
     def nextChar(self):
         if self.index < len(self.str):
             self.currentChar = self.str[self.index - 1]
@@ -37,3 +38,16 @@ class AbstractLexer:
 
     def nextToken(self):
         raise NotImplementedError()
+
+
+class Lexer(AbstractLexer):
+    def __init__(self, tokensDict):
+        super().__init__(tokensDict)
+        
+        self.nfa = NFAUnionFromREs(
+            [self.tokens[key] for key in self.tokens],
+            [key for key in self.tokens]
+        )
+        
+    def nextToken(self):
+        pass # TODO
