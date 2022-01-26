@@ -1,11 +1,4 @@
-from lexer import Lexer
-
-
-class ASTNode:
-    def __init__(self, type, literal = None):
-        self.type = type
-        self.literal = literal
-        self.children = []
+from mylexer import Lexer
 
 class Parser:
     def __init__(self, rules):

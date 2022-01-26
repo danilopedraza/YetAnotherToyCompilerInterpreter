@@ -1,14 +1,50 @@
 from enum import IntEnum
 
-from lexer import (
-    AbstractLexer,
-    Token
-)
-from parser import ASTNode
+
+class Token:
+    def __init__(self, type, literal):
+        self.type = type
+        self.literal = literal
+
+
+class AbstractLexer:
+    def __init__(self, tokens):
+        self.tokens = tokens
+    
+    def set(self, str):
+        self.str = str
+        self.index = 0
+        self.nextChar()
+
+    def nextChar(self):
+        if self.index + 1 < len(self.str):
+            self.index += 1
+            self.currentChar = self.str[self.index - 1]
+            self.lookAheadChar = self.str[self.index]
+        elif self.index + 1 == len(self.str):
+            self.index += 1
+            self.currentChar = self.str[self.index - 1]
+            self.lookAheadChar = None
+            
+        else:
+            self.currentChar = None
+            self.lookAheadChar = None
+
+    def nextToken(self):
+        raise NotImplementedError()
+
+
+class ASTNode:
+    def __init__(self, type, literal = None):
+        self.type = type
+        self.literal = literal
+        self.children = []
+
 
 class RELexer(AbstractLexer):
-    def __init__(self, str, tokensDict):
-        super().__init__(str, tokensDict)
+    def __init__(self, tokens):
+        super().__init__(tokens)
+        self.tokensDict = {pair[1]:pair[0] for pair in tokens}
         
     
     def nextToken(self):
@@ -30,13 +66,13 @@ class REParser:
 
 
     def __init__(self):
-        self.tokensDict = {
-            "(" : "LPAREN",
-            ")" : "RPAREN",
-            "|" :  "UNION",
-            "*" :   "STAR" 
-        }
-        self.lexer = RELexer(self.tokensDict)
+        self.tokens = [
+            ("LPAREN", "("),
+            ("RPAREN", ")"),
+            ("UNION" , "|"),
+            ("STAR"  , "*"),
+        ]
+        self.lexer = RELexer(self.tokens)
 
         self.currentToken = None
         self.lookAhead = None
@@ -132,6 +168,27 @@ class NFA:
             self.graph = graph
             self.initial = initial
             self.accepting = accepting
+    
+    def epsilonClosure(self, states):
+        stack = states + []
+
+        while len(stack) > 0:
+            t = stack.pop()
+            if "" in self.graph[t]:
+                for u in self.graph[t][""]:
+                    if u not in states:
+                        states.append(u)
+                        stack.append(u)
+        
+        return states
+    
+    def move(self, states, symbol):
+        res = []
+        for state in states:
+            if symbol in self.graph[state]:
+                res += self.graph[state][symbol]
+        
+        return res
         
 
 def getNFA(root):
@@ -231,8 +288,8 @@ def getNFA(root):
         return None
 
 
-def NFAUnionFromREs(exps, tokens):
-    if len(exps) == 0 or len(exps) != len(tokens):
+def NFAUnionFromREs(tokens):
+    if len(tokens) == 0:
         return None
     
     parser = REParser()
@@ -243,11 +300,11 @@ def NFAUnionFromREs(exps, tokens):
         {}
     )
 
-    for i in range(len(exps)):
-        temp = getNFA(parser.parse(exps[i]))
+    for i in range(len(tokens)):
+        temp = getNFA(parser.parse(tokens[i][1]))
         
         res.graph[res.initial][""].append(temp.initial + len(res.graph))
-        res.accepting[temp.accepting + len(res.graph)] = tokens[i]
+        res.accepting[temp.accepting + len(res.graph)] = tokens[i][0]
         
 
         for j in range(len(temp.graph)):
