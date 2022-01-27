@@ -34,6 +34,12 @@ class Lexer(AbstractLexer):
         
         
         if acceptingState == None:
+            
+            if stringStart == self.index - 1:
+                stringEnd = self.index
+            else:
+                stringEnd = self.index - 1
+            
             res = Token(
                 "ILLEGAL",
                 self.str[stringStart : stringEnd]

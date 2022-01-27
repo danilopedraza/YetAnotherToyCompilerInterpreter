@@ -5,4 +5,3 @@ def getLangInfo(filename):
     res = json.load(f)
     f.close()
     return res
-
