@@ -25,17 +25,24 @@ class Parser:
         self.lookAhead = self.lexer.nextToken()
     
     def parse(self, expr):
-        res = []
-
         self.lexer.set(expr)
         self.advanceTokens()
         self.advanceTokens()
 
+        root = ASTNode(self.grammar[0][0])
+        nodeStack = [root]
         
         stack = ["EOF", self.grammar[0][0]]
         while stack[-1] != "EOF":
             if stack[-1] in self.terminals:
                 if stack[-1] == self.currentToken.type:
+                    nodeStack[-1].children.append(
+                        ASTNode(
+                            self.currentToken.type,
+                            self.currentToken.literal
+                        )
+                    )
+                    nodeStack.pop()
                     self.advanceTokens()
                     stack.pop()
                 else:
@@ -47,11 +54,11 @@ class Parser:
                 stack.pop()
                 if rule[1] != [""]:
                     stack += rule[1][::-1]
-
-                
-                res.append(rule)
+                    nodeStack[-1].children = [ASTNode(type) for type in rule[1]]
+                    nodeStack += nodeStack[-1].children[::-1]
+                nodeStack.pop()
         
-        return res
+        return root
 
     def computeTable(self):
         for nonTerminal in self.nonTerminals:

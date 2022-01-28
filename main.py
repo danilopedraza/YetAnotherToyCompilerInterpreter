@@ -11,7 +11,7 @@ def getLangInfo(filename):
 a = Parser(
     {
         "tokens":[
-            ("INT", "(0|1|2|3|4|5|6|7|8|9)*"),
+            ("INT", "(0|1|2|3|4|5|6|7|8|9)(0|1|2|3|4|5|6|7|8|9)*"),
             ("PLUS","+"),
             ("MINUS", "-"),
             ("LPAREN", "["),
@@ -29,5 +29,4 @@ a = Parser(
         ]
     }
 )
-for i in a.parse("5+[2-7]"):
-    print(i)
+tree = a.parse("5+2")
