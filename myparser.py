@@ -36,13 +36,9 @@ class Parser:
         while stack[-1] != "EOF":
             if stack[-1] in self.terminals:
                 if stack[-1] == self.currentToken.type:
-                    nodeStack[-1].children.append(
-                        ASTNode(
-                            self.currentToken.type,
-                            self.currentToken.literal
-                        )
-                    )
+                    nodeStack[-1].literal = self.currentToken.literal
                     nodeStack.pop()
+                    
                     self.advanceTokens()
                     stack.pop()
                 else:
@@ -51,12 +47,15 @@ class Parser:
                 rule = self.table[stack[-1]][self.currentToken.type]
                 if rule == None:
                     return None
+                
                 stack.pop()
                 if rule[1] != [""]:
                     stack += rule[1][::-1]
-                    nodeStack[-1].children = [ASTNode(type) for type in rule[1]]
-                    nodeStack += nodeStack[-1].children[::-1]
+                
+                temp = nodeStack[-1]
                 nodeStack.pop()
+                temp.children = [ASTNode(type) for type in rule[1]]
+                nodeStack += temp.children[::-1]
         
         return root
 
