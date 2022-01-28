@@ -29,5 +29,5 @@ a = Parser(
         ]
     }
 )
-for i in a.parse("5"):
+for i in a.parse("5+[2-7]"):
     print(i)

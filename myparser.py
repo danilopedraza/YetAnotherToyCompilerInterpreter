@@ -100,28 +100,25 @@ class Parser:
                 self.followCache[variable] = set()
             
             self.followCache[self.grammar[0][0]] = set(["EOF"])
-
-
-            for _ in range(10):
-                self.computeFollow(initial=False)
-            
-            
         
-
-
+        repeated = True
+        
         for variable in self.nonTerminals:
             for _, rule in self.grammar:
                 for i in range(1, len(rule)):
                     if variable == rule[i - 1]:
-                        temp = self.first(rule[i:])
+                        temp = set(self.first(rule[i:]))
+                        temp.discard("")
+                        if not temp.issubset(self.followCache[variable]):
+                            repeated = False
                         self.followCache[variable].update(temp)
-                        if "" in self.followCache[variable]:
-                            self.followCache[variable].discard("")
                         
         
         for variable in self.nonTerminals:
             for nonTerminal, rule in self.grammar:
                 if variable == rule[-1]:
+                    if not self.followCache[nonTerminal].issubset(self.followCache[variable]):
+                        repeated = False
                     self.followCache[variable].update(self.followCache[nonTerminal])
                     continue
                 
@@ -129,6 +126,9 @@ class Parser:
                     if variable == rule[i - 1] and "" in self.first(rule[i:]):
                         self.followCache[variable].update(self.followCache[nonTerminal])
                         break
+        
+        if not repeated:
+            self.computeFollow(initial=False)
     
     def computeFirst(self, initial=True):
         if initial:
@@ -148,16 +148,15 @@ class Parser:
                 else:
                     self.firstCache[variable] = set()
 
-            
-            for _ in range(4):
-                self.computeFirst(initial=False)
 
+        repeated = True
 
-        
         for variable, rule in self.grammar:
             epsilonInAll = True
             for i in range(len(rule)):
                 if epsilonInAll:
+                    if not self.firstCache[rule[i]].issubset(self.firstCache[variable]):
+                        repeated = False
                     self.firstCache[variable].update(self.firstCache[rule[i]])
                     epsilonInAll = ("" in self.firstCache[rule[i]])
                 else:
@@ -173,10 +172,12 @@ class Parser:
             epsilonInAll = True
             for i in range(len(rule)):
                 if epsilonInAll:
+                    if not self.firstCache[rule[i]].issubset(self.firstCache[conc]):
+                        repeated = False
                     self.firstCache[conc].update(self.firstCache[rule[i]])
                     epsilonInAll = ("" in self.firstCache[rule[i]])
                 else:
                     break
             
-            #if not epsilonInAll:
-            #    self.firstCache[conc].discard("")
+            if not repeated:
+                self.computeFirst(initial=False)
