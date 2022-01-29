@@ -1,3 +1,4 @@
+import graphviz
 from myparser import Parser
 
 def treeToTeX(tree):
@@ -11,6 +12,24 @@ def treeToTeX(tree):
         res+=treeToTeX(subtree)+" "
     
     return res+"]"
+
+def displayTree(tree):
+    newTree = graphviz.Graph()
+
+    stack = [tree]
+    while stack != []:
+        root = stack.pop()
+        if root.literal == None:
+            label = root.type
+        else:
+            label = root.literal
+        newTree.node(str(root), label)
+        
+        newTree.edges((str(root), str(root.children[k])) for k in range(len(root.children)))
+        stack += root.children[::-1]
+
+    newTree.render(view=True)
+
 
 
 tokens = [
@@ -34,4 +53,5 @@ grammar = [
 
 a = Parser(tokens, grammar)
 tree = a.parse("5-2+7")
-print("\\Tree "+treeToTeX(tree))
+print(treeToTeX(tree))
+displayTree(tree)
