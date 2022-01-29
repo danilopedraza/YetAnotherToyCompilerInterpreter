@@ -1,11 +1,4 @@
-import json
 from myparser import Parser
-
-def getLangInfo(filename):
-    f = open(filename)
-    res = json.load(f)
-    f.close()
-    return res
 
 def treeToTeX(tree):
     if (tree.literal != None):
