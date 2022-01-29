@@ -10,7 +10,7 @@ Para procesar una cadena, basta construir  un objeto ```Parser(tokens, grammar)`
 etiquetando tokens de acuerdo a las expresiones regulares con las que haya compatibilidad.
 Siempre se aceptará el prefijo más largo posible, y si hay dos expresiones que aceptan una cadena, se tomará la primera en la lista.
 No se pueden ignorar tokens, solo lidiar con ellos en la gramática.
-Cuando la cadena de entrada se consuma por completo, se retornarán tokens de tipo ```"EOF"```.
+Cuando la cadena de entrada se consuma por completo, se retornarán objetos ```Token``` de tipo ```"EOF"```.
 
 * ```grammar```, una lista de parejas de la forma ```(noTerminal, regla)```. Cada pareja representa una regla de producción para una gramática LL(1).
 Se asume que en la primera regla de la lista, a la izquierda, está el simbolo inicial. La parte de la derecha es una lista de simbolos de la gramática,
