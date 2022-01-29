@@ -85,7 +85,7 @@ class Parser:
             return self.followCache[variable]
 
     def first(self, symbols):
-        conc = "".join(symbols)
+        conc = " ".join(symbols)
 
         if conc in self.firstCache:
             return self.firstCache[conc]
@@ -176,7 +176,7 @@ class Parser:
             #    self.firstCache[variable].discard("")
         
         for variable, rule in self.grammar:
-            conc = "".join(rule)
+            conc = " ".join(rule)
             if conc not in self.firstCache:
                 self.firstCache[conc] = set()
             epsilonInAll = True
