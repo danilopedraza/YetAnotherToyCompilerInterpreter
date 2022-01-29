@@ -4,9 +4,9 @@ def treeToTeX(tree):
     if (tree.literal != None):
         if tree.type == "EPSILON":
             return '$\\epsilon$'
-        return "\\text{"+tree.literal+"}"
+        return "$"+tree.literal+"$"
     
-    res = "[."+tree.type+" "
+    res = "[.$"+tree.type+"$ "
     for subtree in tree.children:
         res+=treeToTeX(subtree)+" "
     
