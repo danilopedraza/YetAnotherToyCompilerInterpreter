@@ -7,6 +7,17 @@ def getLangInfo(filename):
     f.close()
     return res
 
+def treeToTeX(tree):
+    if (tree.literal != None):
+        if tree.type == "EPSILON":
+            return '$\\epsilon$'
+        return "\\text{"+tree.literal+"}"
+    
+    res = "[."+tree.type+" "
+    for subtree in tree.children:
+        res+=treeToTeX(subtree)+" "
+    
+    return res+"]"
 
 a = Parser(
     {
@@ -29,4 +40,5 @@ a = Parser(
         ]
     }
 )
-tree = a.parse("5+2")
+tree = a.parse("5-2+7")
+print("\\Tree "+treeToTeX(tree))

@@ -32,8 +32,8 @@ class Parser:
         root = ASTNode(self.grammar[0][0])
         nodeStack = [root]
         
-        stack = ["EOF", self.grammar[0][0]]
-        while stack[-1] != "EOF":
+        stack = [self.grammar[0][0]]
+        while stack != []:
             if stack[-1] in self.terminals:
                 if stack[-1] == self.currentToken.type:
                     nodeStack[-1].literal = self.currentToken.literal
@@ -49,13 +49,17 @@ class Parser:
                     return None
                 
                 stack.pop()
-                if rule[1] != [""]:
-                    stack += rule[1][::-1]
-                
+
                 temp = nodeStack[-1]
                 nodeStack.pop()
-                temp.children = [ASTNode(type) for type in rule[1]]
-                nodeStack += temp.children[::-1]
+
+                if rule[1] != [""]:
+                    stack += rule[1][::-1]
+
+                    temp.children = [ASTNode(type) for type in rule[1]]
+                    nodeStack += temp.children[::-1]
+                else:
+                    temp.children = [ASTNode("EPSILON", "")]
         
         return root
 
