@@ -4,6 +4,12 @@ Un parser básico para gramáticas LL(1).
 
 ## Uso
 
+Para correr el programa de ejemplo:
+
+* Descargar el repositorio
+* En el directorio del repositorio, descargar el requerimiento con ```pip install -r requirements.txt```
+* Ejecutar con ```python3 main.py```
+
 Para procesar una cadena, basta construir  un objeto ```Parser(tokens, grammar)``` (disponible en ```myparser.py```), con dos entradas:
 
 * ```tokens```, una lista de parejas de la forma ```(nombre, regex)```. El buffer de tokens para el parser se obtendrá en función de este parámetro,
@@ -17,7 +23,7 @@ que deben ser etiquetas definidas en la lista de tokens, o simbolos a la izquier
 
 Ya con el parser construido, solo hay que usar el método ```parse(string)``` para obtener la raíz del árbol de sintaxis: un objeto ```ASTNode``` con
 atributos ```type```, ```children``` y ```literal```. Todos los nodos tienen el atributo ```type```, los no terminales tienen
-nodos hijos en ```children```, que es una lista, y los terminales tienen una cadena en el atributo ```literal```. Los nodos correspondientes a la cadena vacía tendrán el tipo ```"EPSILON"```.
+nodos hijos en ```children```, que es una lista, y los terminales tienen una cadena en el atributo ```literal```. Los nodos correspondientes a la cadena vacía tienen el tipo ```"EPSILON"```.
 
 
 ## Sobre la implementación
