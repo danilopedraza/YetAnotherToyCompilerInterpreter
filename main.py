@@ -25,7 +25,7 @@ def displayTree(tree):
             label = root.literal
         newTree.node(str(root), label)
         
-        newTree.edges((str(root), str(root.children[k])) for k in range(len(root.children)))
+        newTree.edges((str(root), str(child)) for child in root.children)
         stack += root.children[::-1]
 
     newTree.render(view=True)
