@@ -53,5 +53,5 @@ grammar = [
 
 a = Parser(tokens, grammar)
 tree = a.parse("5-2+7")
-print(treeToTeX(tree))
+print("\\Tree " + treeToTeX(tree))
 displayTree(tree)
