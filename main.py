@@ -1,4 +1,5 @@
-import graphviz
+from mylexer import Lexer
+from graphviz import Graph
 from myparser import Parser
 
 def treeToTeX(tree):
@@ -14,7 +15,7 @@ def treeToTeX(tree):
     return res+"]"
 
 def displayTree(tree):
-    newTree = graphviz.Graph()
+    newTree = Graph()
 
     stack = [tree]
     while stack != []:
@@ -51,7 +52,7 @@ grammar = [
     ("F", ["INT"])
 ]
 
-a = Parser(tokens, grammar)
+a = Parser(Lexer(tokens), tokens, grammar)
 tree = a.parse("5-2+7")
 print("\\Tree " + treeToTeX(tree))
 displayTree(tree)

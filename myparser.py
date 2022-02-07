@@ -1,10 +1,9 @@
-from mylexer import Lexer
 from re_to_nfa import ASTNode
 
 class Parser:
-    def __init__(self, tokens, grammar):
+    def __init__(self, lexer, tokens, grammar):
         self.tokens, self.grammar = tokens, grammar
-        self.lexer = Lexer(self.tokens)
+        self.lexer = lexer
 
         self.currentToken = None
         self.lookAhead = None
