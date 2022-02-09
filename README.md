@@ -10,9 +10,9 @@ Para correr el programa de ejemplo:
 * En el directorio del repositorio, descargar el requerimiento con ```pip install -r requirements.txt```
 * Ejecutar con ```python3 main.py```
 
-Para procesar una cadena, basta construir  un objeto ```Parser(tokens, grammar)``` (disponible en ```myparser.py```), con dos entradas:
+Para procesar una cadena, basta construir  un objeto ```Parser(Lexer(tokens), grammar)``` (disponible en ```myparser.py```), con dos entradas:
 
-* ```tokens```, una lista de parejas de la forma ```(nombre, regex)```. El buffer de tokens para el parser se obtendrá en función de este parámetro,
+* Un objeto ```Lexer``` con un parámetro ```tokens```, que es una lista de parejas de la forma ```(nombre, regex)```. El buffer de tokens para el parser se obtendrá en función de este parámetro,
 etiquetando tokens de acuerdo a las expresiones regulares con las que haya compatibilidad.
 Siempre se aceptará el prefijo más largo posible, y si hay dos expresiones que aceptan una cadena, se tomará la primera en la lista.
 No se pueden ignorar tokens, solo lidiar con ellos en la gramática.
