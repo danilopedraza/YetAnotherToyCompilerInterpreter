@@ -36,9 +36,9 @@ def displayTree(tree):
 tokens = [
     ("INT", "(0|1|2|3|4|5|6|7|8|9)(0|1|2|3|4|5|6|7|8|9)*"),
     ("PLUS","+"),
-    ("MINUS", "-"),
-    ("LPAREN", "["),
-    ("RPAREN", "]")
+    ("MINUS", "\*"),
+    ("LPAREN", "\("),
+    ("RPAREN", "\(")
 ]
 
 grammar = [
@@ -53,6 +53,6 @@ grammar = [
 ]
 
 a = Parser(Lexer(tokens), tokens, grammar)
-tree = a.parse("5-2+7")
+tree = a.parse("5*2+7")
 print("\\Tree " + treeToTeX(tree))
 displayTree(tree)

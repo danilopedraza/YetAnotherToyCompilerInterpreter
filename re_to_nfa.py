@@ -48,7 +48,10 @@ class RELexer(AbstractLexer):
         
     
     def nextToken(self):
-        if self.currentChar in self.tokensDict:
+        if self.currentChar == "\\":
+            self.nextChar()
+            token = Token("CHAR", self.currentChar)
+        elif self.currentChar in self.tokensDict:
             token = Token(self.tokensDict[self.currentChar], self.currentChar)
         elif self.currentChar != None:
             token = Token("CHAR", self.currentChar)
