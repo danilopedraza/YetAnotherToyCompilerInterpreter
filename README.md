@@ -30,7 +30,7 @@ nodos hijos en ```children```, que es una lista, y los terminales tienen una cad
 
 * Para el análisis léxico se simula un autómata no determinista obtenido de las expresiones regulares. El procesamiento de las expresiones  está en ```re_to_nfa.py```.
 
-* Las expresiones regulares solo usan el operador de unión ```|```, estrella de Kleene ```*``` y los paréntesis ```()```. Así, estos símbolos no se pueden usar como parte del lenguaje a diseñar.
+* Las expresiones regulares solo usan el operador de unión ```|```, estrella de Kleene ```*``` y los paréntesis ```()```. Para detectar estos símbolos con una expresión regular, hay que poner ```\``` al principio de cada carácter especial.
 
 * Para el análisis sintáctico se emplea una estrategia top-down, usando una tabla de parsing. No hay manejo de errores como tal: Si se llega a un estado sin reglas aplicables el procedimiento de parsing es abortado.
 
@@ -43,9 +43,9 @@ En ```main.py``` se crea un objeto ```Parser``` con los siguientes parámetros:
 tokens = [
     ("INT", "(0|1|2|3|4|5|6|7|8|9)(0|1|2|3|4|5|6|7|8|9)*"),
     ("PLUS","+"),
-    ("MINUS", "-"),
-    ("LPAREN", "["),
-    ("RPAREN", "]")
+    ("MINUS", "\*"),
+    ("LPAREN", "\("),
+    ("RPAREN", "\)")
 ]
 
 grammar = [
@@ -60,12 +60,12 @@ grammar = [
 ]
 ```
 
-Al procesar la cadena ```"5-2+7"``` se obtiene un árbol de sintaxis que es transformado por la función ```treeToTeX``` en una cadena procesable en LaTeX con el paquete qtree.
+Al procesar la cadena ```"5*2+7"``` se obtiene un árbol de sintaxis que es transformado por la función ```treeToTeX``` en una cadena procesable en LaTeX con el paquete qtree.
 Al renderizar la cadena correspondiente al árbol de ejemplo, luce así:
 
-![](https://i.imgur.com/dg9HMgi.png)
+![](https://i.imgur.com/XVBv5X9.png)
 
 También se puede utilizar la función ```displayTree``` para ver el árbol. ```displayTree``` usa la biblioteca ```graphViz```, el único requerimiento en ```requirements.txt```. Muestra un árbol así:
 
-![](https://i.imgur.com/3309rVD.png)
+![](https://i.imgur.com/CU4lUsE.png)
 
