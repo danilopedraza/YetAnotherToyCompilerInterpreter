@@ -30,7 +30,7 @@ nodos hijos en ```children```, que es una lista, y los terminales tienen una cad
 
 * Para el análisis léxico se simula un autómata no determinista obtenido de las expresiones regulares. El procesamiento de las expresiones  está en ```re_to_nfa.py```.
 
-* Las expresiones regulares solo usan el operador de unión ```|```, estrella de Kleene ```*``` y los paréntesis ```()```. Así, estos símbolos no se pueden usar como parte del lenguaje a diseñar.
+* Las expresiones regulares solo usan el operador de unión ```|```, estrella de Kleene ```*``` y los paréntesis ```()```. Para detectar estos símbolos con una expresión regular, hay que poner ```\``` al principio de cada carácter especial.
 
 * Para el análisis sintáctico se emplea una estrategia top-down, usando una tabla de parsing. No hay manejo de errores como tal: Si se llega a un estado sin reglas aplicables el procedimiento de parsing es abortado.
 
