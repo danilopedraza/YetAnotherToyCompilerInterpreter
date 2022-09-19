@@ -22,7 +22,7 @@ class Lexer(AbstractLexer):
         
         states = self.nfa.epsilonClosure([self.nfa.initial])
 
-        while len(states) > 0:
+        while states != []:
             states = self.nfa.epsilonClosure(self.nfa.move(states, self.currentChar))
             
             accepting = [state for state in states if state in self.nfa.accepting]
@@ -31,7 +31,6 @@ class Lexer(AbstractLexer):
                 stringEnd = self.index
             
             self.nextChar()
-        
         
         if acceptingState == None:
             
